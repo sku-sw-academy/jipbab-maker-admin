@@ -108,6 +108,7 @@ class _NoticeFormState extends State<NoticeForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         title: Text(_isEditing ? '공지사항 수정' : '공지사항 작성'),
         centerTitle: true,
       ),

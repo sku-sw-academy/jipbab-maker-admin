@@ -103,6 +103,7 @@ class _AnswerPageState extends State<AnswerUpdatePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('답변 수정'),
+        scrolledUnderElevation: 0,
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())

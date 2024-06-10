@@ -108,6 +108,7 @@ class _FAQFormState extends State<FAQForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         title: Text(_isEditing ? 'FAQ 수정' : 'FAQ 작성'),
         centerTitle: true,
       ),

@@ -149,7 +149,7 @@ class _ItemPageState extends State<ItemPage> {
               child: DataTable(
                 headingRowColor: MaterialStateColor.resolveWith((states) => Colors.lightBlueAccent),
                 border: TableBorder.all(
-                  width: 3.0,),
+                  width: 1.0,),
               columns: [
                 DataColumn(label: Expanded(child: Text('카테고리', textAlign: TextAlign.center))),
                 DataColumn(label: Expanded(child: Text('품목명', textAlign: TextAlign.center))),

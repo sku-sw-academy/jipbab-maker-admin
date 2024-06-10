@@ -72,6 +72,7 @@ class _AnswerPageState extends State<AnswerPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('답변 작성'),
+        scrolledUnderElevation: 0,
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),

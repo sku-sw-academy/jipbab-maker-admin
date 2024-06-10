@@ -86,7 +86,8 @@ class _AdminPageState extends State<AdminPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Admin Page'),
+        scrolledUnderElevation: 0,
+        title: Text('관리자 페이지'),
         centerTitle: true,
         actions: [
           PopupMenuButton<String>(

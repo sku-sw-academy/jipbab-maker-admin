@@ -179,6 +179,7 @@ class FAQDetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('FAQ Details'),
+        scrolledUnderElevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

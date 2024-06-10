@@ -178,6 +178,7 @@ class NoticeDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         title: Text('Notice Details'),
       ),
       body: Padding(
