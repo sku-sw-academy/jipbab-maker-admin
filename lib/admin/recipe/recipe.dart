@@ -4,6 +4,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_admin/constant.dart';
 import 'package:flutter_admin/dto/RecipeDTO.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_admin/provider/adminprovider.dart';
+import 'package:flutter_admin/dto/AdminDTO.dart';
 
 class RecipeListPage extends StatefulWidget {
   @override
@@ -12,16 +15,20 @@ class RecipeListPage extends StatefulWidget {
 
 class _RecipeListPageState extends State<RecipeListPage> {
   late Future<List<RecipeDTO>> recipeList;
+  int? currentAdminId;
+  late AdminDTO? admin;
 
   @override
   void initState() {
     super.initState();
     recipeList = fetchRecipes();
+    admin = Provider.of<AdminProvider>(context, listen: false).admin;
+    currentAdminId = admin!.id;
+    print(currentAdminId);
   }
 
   Future<List<RecipeDTO>> fetchRecipes() async {
-    final response =
-    await http.get(Uri.parse('${Constants.baseUrl}/recipe/listAll'));
+    final response = await http.get(Uri.parse('${Constants.baseUrl}/recipe/listAll'));
 
     if (response.statusCode == 200) {
       var responseBody = utf8.decode(response.bodyBytes);
@@ -32,12 +39,14 @@ class _RecipeListPageState extends State<RecipeListPage> {
     }
   }
 
-  Future<void> updateRecipeShareStatus(int id) async {
-    final response = await http
-        .put(Uri.parse('${Constants.baseUrl}/recipe/status/$id'));
+  Future<void> updateRecipeShareStatus(int id, int adminId) async {
+    final response = await http.put(Uri.parse('${Constants.baseUrl}/recipe/status/$id/$adminId'));
 
     if (response.statusCode == 200) {
       print('Recipe status updated successfully.');
+      setState(() {
+        recipeList = fetchRecipes();
+      });
     } else {
       throw Exception('Failed to update recipe status');
     }
@@ -46,23 +55,25 @@ class _RecipeListPageState extends State<RecipeListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: FutureBuilder<List<RecipeDTO>>(
-          future: recipeList,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Failed to load recipes'));
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Center(child: Text('No recipes found'));
-            } else {
-              return Center(
-                child: DataTable(
+      body: Center(child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child:  SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: FutureBuilder<List<RecipeDTO>>(
+            future: recipeList,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Failed to load recipes'));
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Center(child: Text('No recipes found'));
+              } else {
+                return DataTable(
                   headingRowColor: MaterialStateColor.resolveWith((states) => Colors.lightBlueAccent),
-                  border: TableBorder.all(
-                    width: 1.0,),
+                  border: TableBorder.all(width: 1.0,),
                   columns: [
+                    DataColumn(label: Expanded(child:Text('이메일', textAlign: TextAlign.center,))),
                     DataColumn(label: Expanded(child:Text('제목', textAlign: TextAlign.center,))),
                     DataColumn(label: Expanded(child:Text('상태', textAlign: TextAlign.center,))),
                     DataColumn(label: Expanded(child:Text('삭제', textAlign: TextAlign.center,))),
@@ -70,6 +81,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
                   ],
                   rows: snapshot.data!.map((recipe) {
                     return DataRow(cells: [
+                      DataCell(Text(recipe.userDTO.email)),
                       DataCell(Text(recipe.title)),
                       DataCell(recipe.status
                           ? Icon(Icons.check_circle, color: Colors.green)
@@ -95,7 +107,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
                               IconButton(
                                 icon: Icon(Icons.share),
                                 onPressed: () {
-                                  updateRecipeShareStatus(recipe.id);
+                                  updateRecipeShareStatus(recipe.id, currentAdminId!);
                                 },
                               ),
                           ],
@@ -103,12 +115,13 @@ class _RecipeListPageState extends State<RecipeListPage> {
                       ),
                     ]);
                   }).toList(),
-                ),
-              );
-            }
-          },
+                );
+              }
+            },
+          ),
         ),
       ),
+      )
     );
   }
 }
