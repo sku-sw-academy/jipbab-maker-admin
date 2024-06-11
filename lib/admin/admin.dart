@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_admin/admin/recipe/recipe.dart';
 import 'package:flutter_admin/admin/signout.dart';
 import 'package:flutter_admin/admin/usermanagement.dart';
 import 'package:flutter_admin/constant.dart';
@@ -31,7 +32,7 @@ class _AdminPageState extends State<AdminPage> {
     FAQPage(),
     TabBarPage(),
     NoticePage(),
-    Text('레시피 목록'),
+    RecipeListPage(),
     LogPage(),
   ];
 
