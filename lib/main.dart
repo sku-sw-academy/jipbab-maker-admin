@@ -55,6 +55,8 @@ class MyAppDesktop extends StatelessWidget {
   Future<bool> _isAdminLoggedIn() async {
     final storageService = SecureService();
     String? token = await storageService.readToken("accessToken");
+    // await storageService.deleteToken("accessToken");
+    // await storageService.deleteToken("refreshToken");
     return token != null && token.isNotEmpty;
   }
 }

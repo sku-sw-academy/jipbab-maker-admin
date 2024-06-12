@@ -75,7 +75,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
                   columns: [
                     DataColumn(label: Expanded(child:Text('이메일', textAlign: TextAlign.center,))),
                     DataColumn(label: Expanded(child:Text('제목', textAlign: TextAlign.center,))),
-                    DataColumn(label: Expanded(child:Text('상태', textAlign: TextAlign.center,))),
+                    DataColumn(label: Expanded(child:Text('공유', textAlign: TextAlign.center,))),
                     DataColumn(label: Expanded(child:Text('삭제', textAlign: TextAlign.center,))),
                     DataColumn(label: Expanded(child:Text('내용/공유', textAlign: TextAlign.center,))),
                   ],

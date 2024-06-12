@@ -58,33 +58,6 @@ class _AnswerListState extends State<AnswerListPage> {
     }
   }
 
-  Future<void> _deleteAnswer(int id) async {
-    try {
-      final url = Uri.parse('${Constants.baseUrl}/answer/delete/$id');
-      final response = await http.delete(url, headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-      });
-
-      if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("답변이 삭제되었습니다."),
-          ),
-        );
-        _fetchAnswers(); // 목록을 새로 고침
-      } else {
-        throw Exception('Failed to delete Answer');
-      }
-    } catch (e) {
-      print('Error deleting Answer: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("답변을 삭제하는 데 실패했습니다."),
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,8 +65,8 @@ class _AnswerListState extends State<AnswerListPage> {
           ? Center(child: CircularProgressIndicator())
           : answers.isEmpty
           ? Center(
-        child: Text(
-          "답변 목록이 비어있습니다.",
+            child: Text(
+            "답변 목록이 비어있습니다.",
           style: TextStyle(fontSize: 18),
         ),
       )
@@ -109,8 +82,7 @@ class _AnswerListState extends State<AnswerListPage> {
                 DataColumn(label: Expanded(child: Text('이름', textAlign: TextAlign.center))),
                 DataColumn(label: Expanded(child: Text('제목', textAlign: TextAlign.center))),
                 DataColumn(label: Expanded(child: Text('날짜', textAlign: TextAlign.center))),
-                DataColumn(label: Expanded(child: Text('수정', textAlign: TextAlign.center))),
-                DataColumn(label: Expanded(child: Text('삭제', textAlign: TextAlign.center))),
+                DataColumn(label: Expanded(child: Text('내용', textAlign: TextAlign.center))),
               ],
               rows: answers.map((answer) {
                 return DataRow(cells: [
@@ -129,22 +101,7 @@ class _AnswerListState extends State<AnswerListPage> {
                           _fetchAnswers();
                         });
                       },
-                      child: Text('수정'),
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0),
-                        ),
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.black,
-                      ),
-                    ),
-                  ),
-                  DataCell(
-                    ElevatedButton(
-                      onPressed: () {
-                        _deleteAnswer(answer['id']);
-                      },
-                      child: Text('삭제'),
+                      child: Text('내용'),
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(0),

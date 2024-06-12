@@ -59,45 +59,6 @@ class _AnswerPageState extends State<AnswerUpdatePage> {
     }
   }
 
-  Future<void> _updateAnswer() async {
-    try {
-      final id = answers["id"];
-
-      if (id  != null) {
-        final url = Uri.parse('${Constants.baseUrl}/answer/update');
-        final response = await http.put(
-          url,
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: json.encode({
-            'id': id,
-            'content': answer,
-          }),
-        );
-        if (response.statusCode == 200) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('답변이 성공적으로 수정되었습니다.'),
-            ),
-          );
-          Navigator.pop(context);
-        } else {
-          throw Exception('Failed to update answer');
-        }
-      } else {
-        print('Question ID or Admin ID is null');
-      }
-    } catch (e) {
-      print('Error updating answer: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('답변을 수정하는 중에 오류가 발생했습니다.'),
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,7 +90,8 @@ class _AnswerPageState extends State<AnswerUpdatePage> {
                   answer = value;
                 });
               },
-              maxLines: 6,
+              maxLines: 3,
+              enabled: false,
               controller: TextEditingController(text: answer),
               decoration: InputDecoration(
                 hintText: '답변을 수정해주세요.',
@@ -137,28 +99,7 @@ class _AnswerPageState extends State<AnswerUpdatePage> {
               ),
             ),
             SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                if (answer.isNotEmpty) {
-                  _updateAnswer();
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('답변 내용을 작성해주세요.'),
-                    ),
-                  );
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0),
-                ),
-                backgroundColor: Colors.white,
-                surfaceTintColor: Colors.white,
-                foregroundColor: Colors.black,
-              ),
-              child: Text('수정하기'),
-            ),
+
           ],
         ),
       ),
