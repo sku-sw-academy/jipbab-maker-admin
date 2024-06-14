@@ -10,6 +10,7 @@ class RecipeDTO {
   bool status; // Mutable
   bool deletedAt;
   final DateTime modifyDate;
+  final bool owner;
 
   RecipeDTO({
     required this.id,
@@ -20,7 +21,8 @@ class RecipeDTO {
     this.image,
     required this.status,
     required this.modifyDate,
-    required this.deletedAt
+    required this.deletedAt,
+    required this.owner
   });
 
   factory RecipeDTO.fromJson(Map<String, dynamic> json) {
@@ -33,7 +35,8 @@ class RecipeDTO {
       image: json['image'],
       status: json['status'],
       modifyDate: DateTime.parse(json['modifyDate']),
-      deletedAt: json['deletedAt']
+      deletedAt: json['deletedAt'],
+      owner: json['owner']
     );
   }
 
@@ -46,6 +49,7 @@ class RecipeDTO {
     'image' : image,
     'status' : status,
     'modifyDate': modifyDate.toIso8601String(),
-    'deletedAt' : deletedAt
+    'deletedAt' : deletedAt,
+    'owner' : owner
   };
 }

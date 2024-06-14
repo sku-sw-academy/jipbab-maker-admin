@@ -73,21 +73,42 @@ class _RecipeListPageState extends State<RecipeListPage> {
                   headingRowColor: MaterialStateColor.resolveWith((states) => Colors.lightBlueAccent),
                   border: TableBorder.all(width: 1.0,),
                   columns: [
+                    DataColumn(label: Expanded(child:Text('아이디', textAlign: TextAlign.center,))),
                     DataColumn(label: Expanded(child:Text('이메일', textAlign: TextAlign.center,))),
                     DataColumn(label: Expanded(child:Text('제목', textAlign: TextAlign.center,))),
                     DataColumn(label: Expanded(child:Text('공유', textAlign: TextAlign.center,))),
                     DataColumn(label: Expanded(child:Text('삭제', textAlign: TextAlign.center,))),
+                    DataColumn(label: Expanded(child:Text('소유자', textAlign: TextAlign.center,))),
                     DataColumn(label: Expanded(child:Text('내용/공유', textAlign: TextAlign.center,))),
                   ],
                   rows: snapshot.data!.map((recipe) {
                     return DataRow(cells: [
+                      DataCell(Text(recipe.id.toString())),
                       DataCell(Text(recipe.userDTO.email)),
                       DataCell(Text(recipe.title)),
                       DataCell(recipe.status
                           ? Icon(Icons.check_circle, color: Colors.green)
                           : Icon(Icons.cancel, color: Colors.red)),
                       DataCell(
-                          Text(recipe.deletedAt ? 'Yes' : 'No')),
+                        Container(
+                          child: Text(
+                            recipe.deletedAt ? 'Yes' : 'No',
+                            style: TextStyle(
+                              color: recipe.deletedAt ? Colors.green : Colors.red,
+                            ),
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Container(
+                          child: Text(
+                            recipe.owner ? 'Yes' : 'No',
+                            style: TextStyle(
+                              color: recipe.owner ? Colors.green : Colors.red,
+                            ),
+                          ),
+                        ),
+                      ),
                       DataCell(
                         Row(
                           children: [
@@ -103,7 +124,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
                                 );
                               },
                             ),
-                            if (recipe.status)
+                            if (recipe.status && recipe.owner)
                               IconButton(
                                 icon: Icon(Icons.share),
                                 onPressed: () {
