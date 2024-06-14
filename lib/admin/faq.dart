@@ -142,7 +142,7 @@ class _FAQPageState extends State<FAQPage> {
                 DataColumn(
                     label: Expanded(
                         child:
-                        Text('게시일', textAlign: TextAlign.center))),
+                        Text('작성시간', textAlign: TextAlign.center))),
                 DataColumn(
                     label: Expanded(
                         child: Text('수정',
@@ -166,7 +166,7 @@ class _FAQPageState extends State<FAQPage> {
                   DataCell(
                     Text(faq['modifyDate']
                         .toString()
-                        .substring(0, 19)
+                        .substring(0, 10)
                         .replaceAll("T", " ") ??
                         ''),
                     onTap: () => _navigateToFAQDetail(faq),

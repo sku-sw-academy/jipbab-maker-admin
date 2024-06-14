@@ -138,15 +138,25 @@ class _NoticePageState extends State<NoticePage> {
               ),
               columns: [
                 DataColumn(
-                    label: Text('작성자', textAlign: TextAlign.center)),
+                    label: Expanded(
+                        child:
+                        Text('작성자', textAlign: TextAlign.center))),
                 DataColumn(
-                    label: Text('제목', textAlign: TextAlign.center)),
+                    label: Expanded(
+                        child:
+                        Text('제목', textAlign: TextAlign.center))),
                 DataColumn(
-                    label: Text('게시일', textAlign: TextAlign.center)),
+                    label: Expanded(
+                        child:
+                        Text('작성시간', textAlign: TextAlign.center))),
                 DataColumn(
-                    label: Text('수정', textAlign: TextAlign.center)),
+                    label: Expanded(
+                        child: Text('수정',
+                            textAlign: TextAlign.center))),
                 DataColumn(
-                    label: Text('삭제', textAlign: TextAlign.center)),
+                    label: Expanded(
+                        child: Text('삭제',
+                            textAlign: TextAlign.center))),
               ],
               rows: notices.map((notice) {
                 return DataRow(cells: [
@@ -161,7 +171,7 @@ class _NoticePageState extends State<NoticePage> {
                   DataCell(
                     Text(notice['modifyDate']
                         .toString()
-                        .substring(0, 19)
+                        .substring(0, 10)
                         .replaceAll("T", " ") ??
                         ''),
                     onTap: () => _navigateToNoticeDetail(notice),
