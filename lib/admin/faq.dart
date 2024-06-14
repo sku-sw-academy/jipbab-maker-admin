@@ -118,56 +118,94 @@ class _FAQPageState extends State<FAQPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: faqs.length,
-              itemBuilder: (context, index) {
-                final faq = faqs[index];
-                return GestureDetector(
-                  onTap: () => _navigateToFAQDetail(faq),
-                  child: ListTile(
-                    title: Text(faq['title'] ?? ''), // FAQ 제목 표시
-                    subtitle: Text(faq['modifyDate'].toString().substring(0, 19).replaceAll("T", " ") ?? ''), // FAQ 내용 표시
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (faq['adminDTO']['id'] == currentAdminId)
-                          IconButton(
-                            icon: Icon(Icons.edit),
-                            onPressed: () {
-                              // 수정 버튼을 눌렀을 때 처리할 작업
-                              _navigateToFAQFormWithEdit(faq);
-                            },
-                          ),
-                        if (faq['adminDTO']['id'] == currentAdminId)
-                          IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () {
-                              // 삭제 버튼을 눌렀을 때 처리할 작업
-                              _deleteFAQ(faq);
-                            },
-                          ),
-                      ],
-                    ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Center(
+          child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: SingleChildScrollView(
+            child: DataTable(
+              headingRowColor: MaterialStateColor.resolveWith(
+                      (states) => Colors.lightBlueAccent),
+              border: TableBorder.all(
+                width: 1.0,
+              ),
+              columns: [
+                DataColumn(
+                    label: Expanded(
+                        child:
+                        Text('작성자', textAlign: TextAlign.center))),
+                DataColumn(
+                    label: Expanded(
+                        child:
+                        Text('제목', textAlign: TextAlign.center))),
+                DataColumn(
+                    label: Expanded(
+                        child:
+                        Text('게시일', textAlign: TextAlign.center))),
+                DataColumn(
+                    label: Expanded(
+                        child: Text('수정',
+                            textAlign: TextAlign.center))),
+                DataColumn(
+                    label: Expanded(
+                        child: Text('삭제',
+                            textAlign: TextAlign.center))),
+              ],
+              rows: faqs
+                  .map(
+                    (faq) => DataRow(cells: [
+                      DataCell(
+                        Text(faq['adminDTO']['name'] ?? ''),
+                        onTap: () => _navigateToFAQDetail(faq),
+                      ),
+                  DataCell(
+                    Text(faq['title'] ?? ''),
+                    onTap: () => _navigateToFAQDetail(faq),
                   ),
-                );
-              },
+                  DataCell(
+                    Text(faq['modifyDate']
+                        .toString()
+                        .substring(0, 19)
+                        .replaceAll("T", " ") ??
+                        ''),
+                    onTap: () => _navigateToFAQDetail(faq),
+                  ),
+                  if (faq['adminDTO']['id'] == currentAdminId)
+                    DataCell(
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () => _navigateToFAQFormWithEdit(faq),
+                      ),
+                    )
+                  else
+                    DataCell(Text('')),
+                  if (faq['adminDTO']['id'] == currentAdminId)
+                    DataCell(
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () => _deleteFAQ(faq),
+                      ),
+                    )
+                  else
+                    DataCell(Text('')),
+                ]),
+              )
+                  .toList(),
             ),
           ),
-        ],
+        ),
+      ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _navigateToFAQForm,
         backgroundColor: Colors.white, // Example background color
-        foregroundColor: Colors.black,// "등록하기" 버튼 클릭 시 처리할 작업
+        foregroundColor: Colors.black,
         child: Icon(Icons.add),
       ),
     );
   }
 }
-
 
 class FAQDetailPage extends StatelessWidget {
   final Map<String, dynamic> faq;
@@ -178,15 +216,17 @@ class FAQDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('FAQ Details'),
-        scrolledUnderElevation: 0,
+        title: Text('내용'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(faq['title'] ?? '', style: TextStyle(fontSize: 20),),
+            Text(
+              faq['title'] ?? '',
+              style: TextStyle(fontSize: 20),
+            ),
             Text('작성자: ${faq['adminDTO']['name'] ?? ''}'),
             SizedBox(height: 10),
             Text(faq['content'] ?? ''),

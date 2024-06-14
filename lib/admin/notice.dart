@@ -13,7 +13,7 @@ class NoticePage extends StatefulWidget {
 }
 
 class _NoticePageState extends State<NoticePage> {
-  List<Map<String, dynamic>> notices = []; // FAQ 목록을 저장하는 리스트
+  List<Map<String, dynamic>> notices = []; // Notice 목록을 저장하는 리스트
   int? currentAdminId;
   late AdminDTO? admin;
 
@@ -51,29 +51,29 @@ class _NoticePageState extends State<NoticePage> {
     }
   }
 
-  void _navigateToFAQForm() {
-    // FAQ 작성 폼으로 이동하는 함수
+  void _navigateToNoticeForm() {
+    // Notice 작성 폼으로 이동하는 함수
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => NoticeForm()),
     ).then((_) {
-      // FAQ 작성 폼에서 돌아온 후 FAQ 목록을 다시 불러오기
+      // Notice 작성 폼에서 돌아온 후 Notice 목록을 다시 불러오기
       _fetchNotices();
     });
   }
 
-  void _navigateToFAQFormWithEdit(Map<String, dynamic> notice) {
+  void _navigateToNoticeFormWithEdit(Map<String, dynamic> notice) {
     // 수정하는 폼으로 이동하는 함수
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => NoticeForm(notice: notice)),
     ).then((_) {
-      // FAQ 폼에서 돌아온 후 FAQ 목록을 다시 불러오기
+      // Notice 폼에서 돌아온 후 Notice 목록을 다시 불러오기
       _fetchNotices();
     });
   }
 
-  Future<void> _deleteFAQ(Map<String, dynamic> notice) async {
+  Future<void> _deleteNotice(Map<String, dynamic> notice) async {
     try {
       final url = Uri.parse('${Constants.baseUrl}/notice/delete');
       final response = await http.delete(
@@ -82,13 +82,13 @@ class _NoticePageState extends State<NoticePage> {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, dynamic>{
-          'adminId': notice['adminDTO']['id'], // FAQ 객체 안의 사용자 ID 전송
-          'noticeId': notice['id'], // FAQ 객체의 ID 전송
+          'adminId': notice['adminDTO']['id'], // Notice 객체 안의 사용자 ID 전송
+          'noticeId': notice['id'], // Notice 객체의 ID 전송
         }),
       );
 
       if (response.statusCode == 200) {
-        // FAQ 삭제 성공 시 알림 표시 및 FAQ 목록 다시 불러오기
+        // Notice 삭제 성공 시 알림 표시 및 Notice 목록 다시 불러오기
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("공지사항이 삭제되었습니다."),
@@ -108,7 +108,7 @@ class _NoticePageState extends State<NoticePage> {
     }
   }
 
-  void _navigateToFAQDetail(Map<String, dynamic> notice) {
+  void _navigateToNoticeDetail(Map<String, dynamic> notice) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => NoticeDetailPage(notice: notice)),
@@ -118,56 +118,93 @@ class _NoticePageState extends State<NoticePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: notices.length,
-              itemBuilder: (context, index) {
-                final notice = notices[index];
-                return GestureDetector(
-                  onTap: () => _navigateToFAQDetail(notice),
-                  child: ListTile(
-                    title: Text(notice['title'] ?? ''), // FAQ 제목 표시
-                    subtitle: Text(notice['modifyDate'].toString().substring(0, 19).replaceAll("T", " ") ?? ''), // FAQ 내용 표시
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (notice['adminDTO']['id'] == currentAdminId)
-                          IconButton(
-                            icon: Icon(Icons.edit),
-                            onPressed: () {
-                              // 수정 버튼을 눌렀을 때 처리할 작업
-                              _navigateToFAQFormWithEdit(notice);
-                            },
-                          ),
-                        if (notice['adminDTO']['id'] == currentAdminId)
-                          IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () {
-                              // 삭제 버튼을 눌렀을 때 처리할 작업
-                              _deleteFAQ(notice);
-                            },
-                          ),
-                      ],
-                    ),
+      body: notices.isEmpty
+          ? Center(
+        child: Text(
+          '공지사항이 없습니다.',
+          style: TextStyle(fontSize: 20),
+        ),
+      )
+          : SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Center(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              headingRowColor: MaterialStateColor.resolveWith(
+                      (states) => Colors.lightBlueAccent),
+              border: TableBorder.all(
+                width: 1.0,
+              ),
+              columns: [
+                DataColumn(
+                    label: Text('작성자', textAlign: TextAlign.center)),
+                DataColumn(
+                    label: Text('제목', textAlign: TextAlign.center)),
+                DataColumn(
+                    label: Text('게시일', textAlign: TextAlign.center)),
+                DataColumn(
+                    label: Text('수정', textAlign: TextAlign.center)),
+                DataColumn(
+                    label: Text('삭제', textAlign: TextAlign.center)),
+              ],
+              rows: notices.map((notice) {
+                return DataRow(cells: [
+                  DataCell(
+                    Text(notice['adminDTO']['name']),
+                    onTap: () => _navigateToNoticeDetail(notice),
                   ),
-                );
-              },
+                  DataCell(
+                    Text(notice['title'] ?? ''),
+                    onTap: () => _navigateToNoticeDetail(notice),
+                  ),
+                  DataCell(
+                    Text(notice['modifyDate']
+                        .toString()
+                        .substring(0, 19)
+                        .replaceAll("T", " ") ??
+                        ''),
+                    onTap: () => _navigateToNoticeDetail(notice),
+                  ),
+                  if (notice['adminDTO']['id'] == currentAdminId)
+                    DataCell(
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () {
+                          // 수정 버튼을 눌렀을 때 처리할 작업
+                          _navigateToNoticeFormWithEdit(notice);
+                        },
+                      ),
+                    )
+                  else
+                    DataCell(Text('')),
+                  if (notice['adminDTO']['id'] == currentAdminId)
+                    DataCell(
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          // 삭제 버튼을 눌렀을 때 처리할 작업
+                          _deleteNotice(notice);
+                        },
+                      ),
+                    )
+                  else
+                    DataCell(Text('')),
+                ]);
+              }).toList(),
             ),
           ),
-        ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _navigateToFAQForm,
+        onPressed: _navigateToNoticeForm,
         backgroundColor: Colors.white, // Example background color
-        foregroundColor: Colors.black,// "등록하기" 버튼 클릭 시 처리할 작업
+        foregroundColor: Colors.black, // "등록하기" 버튼 클릭 시 처리할 작업
         child: Icon(Icons.add),
       ),
     );
   }
 }
-
 
 class NoticeDetailPage extends StatelessWidget {
   final Map<String, dynamic> notice;
@@ -178,15 +215,17 @@ class NoticeDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        scrolledUnderElevation: 0,
-        title: Text('Notice Details'),
+        title: Text('내용'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(notice['title'] ?? '', style: TextStyle(fontSize: 20),),
+            Text(
+              notice['title'] ?? '',
+              style: TextStyle(fontSize: 20),
+            ),
             Text('작성자: ${notice['adminDTO']['name'] ?? ''}'),
             SizedBox(height: 10),
             Text(notice['content'] ?? ''),

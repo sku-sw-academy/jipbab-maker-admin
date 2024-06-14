@@ -154,8 +154,8 @@ class _ItemPageState extends State<ItemPage> {
                 DataColumn(label: Expanded(child: Text('카테고리', textAlign: TextAlign.center))),
                 DataColumn(label: Expanded(child: Text('품목명', textAlign: TextAlign.center))),
                 DataColumn(label: Expanded(child: Text('검색수', textAlign: TextAlign.center))),
+                DataColumn(label: Expanded(child: Text('이미지', textAlign: TextAlign.center))),
                 DataColumn(label: Expanded(child: Text('업로드', textAlign: TextAlign.center))),
-                DataColumn(label: Expanded(child: Text('Action', textAlign: TextAlign.center))),
               ],
               rows: items.map((item) {
                 return DataRow(
