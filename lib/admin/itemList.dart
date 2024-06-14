@@ -163,13 +163,17 @@ class _ItemPageState extends State<ItemPage> {
                     DataCell(Text(item.category.categoryName, textAlign: TextAlign.center,)),
                     DataCell(Text(item.itemName, textAlign: TextAlign.center,)),
                     DataCell(Text(item.count.toString(), textAlign: TextAlign.center,)),
-                    DataCell(Text(item.imagePath != null ? "Yes" : "No", textAlign: TextAlign.center,)),
+                    DataCell(
+                        item.imagePath != null
+                            ? Icon(Icons.check_circle, color: Colors.green)
+                            : Icon(Icons.cancel, color: Colors.red)
+                    ),
                     DataCell(
                       ElevatedButton(
                         onPressed: () {
                           getImage(item.itemCode, ImageSource.gallery);
                         },
-                        child: Text('Upload'),
+                        child: Text('업로드'),
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(0), // 원하는 모양의 border radius 설정

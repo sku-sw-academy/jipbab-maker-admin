@@ -76,9 +76,9 @@ class _RecipeListPageState extends State<RecipeListPage> {
                     DataColumn(label: Expanded(child:Text('아이디', textAlign: TextAlign.center,))),
                     DataColumn(label: Expanded(child:Text('이메일', textAlign: TextAlign.center,))),
                     DataColumn(label: Expanded(child:Text('제목', textAlign: TextAlign.center,))),
+                    DataColumn(label: Expanded(child:Text('소유자', textAlign: TextAlign.center,))),
                     DataColumn(label: Expanded(child:Text('공유', textAlign: TextAlign.center,))),
                     DataColumn(label: Expanded(child:Text('삭제', textAlign: TextAlign.center,))),
-                    DataColumn(label: Expanded(child:Text('소유자', textAlign: TextAlign.center,))),
                     DataColumn(label: Expanded(child:Text('내용/공유', textAlign: TextAlign.center,))),
                   ],
                   rows: snapshot.data!.map((recipe) {
@@ -86,28 +86,19 @@ class _RecipeListPageState extends State<RecipeListPage> {
                       DataCell(Text(recipe.id.toString())),
                       DataCell(Text(recipe.userDTO.email)),
                       DataCell(Text(recipe.title)),
+                      DataCell(
+                          recipe.owner
+                              ? Icon(Icons.check_circle, color: Colors.green)
+                              : Icon(Icons.cancel, color: Colors.red)
+                      ),
                       DataCell(recipe.status
                           ? Icon(Icons.check_circle, color: Colors.green)
-                          : Icon(Icons.cancel, color: Colors.red)),
-                      DataCell(
-                        Container(
-                          child: Text(
-                            recipe.deletedAt ? 'Yes' : 'No',
-                            style: TextStyle(
-                              color: recipe.deletedAt ? Colors.green : Colors.red,
-                            ),
-                          ),
-                        ),
+                          : Icon(Icons.cancel, color: Colors.red)
                       ),
                       DataCell(
-                        Container(
-                          child: Text(
-                            recipe.owner ? 'Yes' : 'No',
-                            style: TextStyle(
-                              color: recipe.owner ? Colors.green : Colors.red,
-                            ),
-                          ),
-                        ),
+                        recipe.deletedAt
+                          ? Icon(Icons.check_circle, color: Colors.green)
+                        : Icon(Icons.cancel, color: Colors.red)
                       ),
                       DataCell(
                         Row(
