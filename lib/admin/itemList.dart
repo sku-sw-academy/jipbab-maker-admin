@@ -124,6 +124,7 @@ class _ItemPageState extends State<ItemPage> {
       String image = await response.stream.bytesToString();
       print('Image: $image');
       setState(() {
+        fetchData();
          // 서버에서 받은 이미지
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('이미지가 업로드 되었습니다.')),
