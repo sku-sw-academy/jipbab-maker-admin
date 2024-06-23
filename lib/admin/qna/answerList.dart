@@ -82,6 +82,7 @@ class _AnswerListState extends State<AnswerListPage> {
                 DataColumn(label: Expanded(child: Text('이름', textAlign: TextAlign.center))),
                 DataColumn(label: Expanded(child: Text('제목', textAlign: TextAlign.center))),
                 DataColumn(label: Expanded(child: Text('날짜', textAlign: TextAlign.center))),
+                DataColumn(label: Expanded(child: Text('삭제', textAlign: TextAlign.center))),
                 DataColumn(label: Expanded(child: Text('내용', textAlign: TextAlign.center))),
               ],
               rows: answers.map((answer) {
@@ -89,6 +90,7 @@ class _AnswerListState extends State<AnswerListPage> {
                   DataCell(Text(answer['admin']['name'] ?? '', textAlign: TextAlign.center)),
                   DataCell(Text(answer['question']["title"] ?? '', textAlign: TextAlign.center)),
                   DataCell(Text(answer['modifyDate'].toString().substring(0, 10) ?? '', textAlign: TextAlign.center)),
+                  DataCell(Text(answer['question']['deletedAt'] == null ? "false" : "true", textAlign: TextAlign.center, style: TextStyle(color: answer['question']['deletedAt'] == null ? Colors.red: Colors.green,),)),
                   DataCell(
                     ElevatedButton(
                       onPressed: () {
